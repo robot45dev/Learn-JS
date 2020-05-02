@@ -1,0 +1,54 @@
+.card-old-price{
+    text-decoration: line-through;
+    color: #ccc;
+}
+.card-old-price+.card-current-price{
+    color: red;
+}
+
+.card {
+    height: 100%;
+    position: relative;
+}
+
+.card.notInStock,
+.card.notInStock i,
+.card-current-price {
+    color: grey !important;
+}
+
+.card.remainZero a {
+    background-color: grey;
+    border: grey;
+}
+
+.card.remainZero img {
+    filter: grayscale(100%);
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.card-availability.remainZero {
+    color: #851003;
+}
+
+.card-availability.remainSmall {
+    color: gold;
+}
+
+.card-availability.remainLot {
+    color: green;
+}
+
+.top-star {
+    position: absolute;
+    color: gold;
+    font-size: 50px;
+    top: 5px;
+    right: 5px;
+}
