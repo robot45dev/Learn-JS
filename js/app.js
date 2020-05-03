@@ -148,6 +148,22 @@ const data = [
     },
 ];
 
+
+function actualPrice (products) {
+    for (let element of products) {
+
+        element.price *= USD;
+        console.log(element);
+    }
+}
+
+actualPrice(data);
+
+
+//ахахаах че-то телики подорожали
+
+//console.log(data.map.has('price'));
+
 const productList = document.getElementById("product-list");
 const sortSelect = document.getElementById("sort-select");
 const filterForm = document.getElementById("filter-form");
@@ -159,7 +175,7 @@ filterForm.addEventListener("submit", filtered(data));
 
 function filterBy(options) {
     return function (el) {
-        if (options.type === "price") {
+        if (options.type === "price") {  //  * USD
             return (el.price >= options.min && el.price <= options.max);
         }
     };
@@ -173,7 +189,7 @@ function filtered(products) {
         let maxValue = data.get('max');
         productList.innerHTML = "";
         appendCardsToList(products.filter(filterBy({
-            type: 'price',
+            type: 'price',   //* USD
             min: minValue,
             max: maxValue
         })));
@@ -227,14 +243,15 @@ function createCardTemplate(product) {
         starTags += `<i class="${starClass}"></i>`;
     }
 
-    let html = `<div class="col-4 my-3">
+    let html =
+        `<div class="col my-3">
           <div class="card ${availabilityColorClass}">
             <img src="${product.img}" class="card-img-top" alt="${product.title}">
             <div class="card-body">
               <h5 class="card-title">${product.title}</h5>
               <p class="card-rating">Рейтинг: ${starTags}</p>
-              ${product.old_price ? `<p class="card-old-price"> Старая цена: ${formatter.format(product.old_price * USD)}</p>` : ""}
-              <p class="card-current-price">Цена: ${formatter.format(product.price * USD)}</p>
+              ${product.old_price ? `<p class="card-old-price"> Старая цена: ${formatter.format(product.old_price)}</p>` : ""}
+              <p class="card-current-price">Цена: ${formatter.format(product.price)}</p>
               <p class="card-availability ${availabilityColorClass}">Наличие: ${availability}</p>
               <a href="#" role="button" class="btn btn-success buy-btn ${availabilityActionClass}">Купить</a>
               ${product.top && product.available !== 0 ? `<i class="fas fa-star top-star"></i>` : ""}
@@ -265,19 +282,23 @@ pileSmall.addEventListener("click", pileChangeToSmall);
 
 
 function pileChangeToLarge() {
-    let pileClassSearch = document.querySelectorAll('.col-3');
+    let pileClassSearch = document.querySelectorAll('.row-cols-4');
     for (let element of pileClassSearch) {
-        element.classList.remove('col-3');
-        element.classList.add('col-4');
+        element.classList.add('row-cols-3');
+        element.classList.remove('row-cols-4');
     }
+    pileLarge.classList.add('active');
+    pileSmall.classList.remove('active');
 }
 
 function pileChangeToSmall() {
-    let pileClassSearch = document.querySelectorAll('.col-4');
+    let pileClassSearch = document.querySelectorAll('.row-cols-3');
     for (let element of pileClassSearch) {
-        element.classList.remove('col-4');
-        element.classList.add('col-3');
+        element.classList.add('row-cols-4');
+        element.classList.remove('row-cols-3');
     }
+    pileLarge.classList.remove('active');
+    pileSmall.classList.add('active');
 }
 
 
