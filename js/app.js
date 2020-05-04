@@ -148,12 +148,29 @@ const data = [
     },
 ];
 
+const stockCheckbox = document.querySelector('input[name="checkbox"]');
+console.log(stockCheckbox);
+
+stockCheckbox.addEventListener("change", stock(data));
+
+function stockCheck (products) {
+    for (let element of products) {
+        if (element.sale) {
+            return;
+        }
+    }
+}
+
+function stock (products) {
+    if(stockCheckbox.checked) {
+        appendCardsToList(products.filter(stockCheck))
+    }
+}
 
 function actualPrice (products) {
     for (let element of products) {
-
         element.price *= USD;
-        console.log(element);
+        // console.log(element);
     }
 }
 
@@ -170,6 +187,7 @@ appendCardsToList(data);
 sortSelect.addEventListener("change", sorted(data));
 filterForm.addEventListener("submit", filtered(data));
 
+
 function filterBy(options) {
     return function (el) {
         if (options.type === "price") {  //  * USD
@@ -177,6 +195,7 @@ function filterBy(options) {
         }
     };
 }
+
 
 function filtered(products) {
     return function (e) {
@@ -267,6 +286,7 @@ function createCardTemplate(product) {
               ${product.old_price ? `<p class="card-old-price"> Старая цена: ${formatter.format(product.old_price)}</p>` : ""}
               <p class="card-current-price">Цена: ${formatter.format(product.price)}</p>
               <p class="card-availability ${availabilityColorClass}">Наличие: ${availability}</p>
+              ${product.sale && product.available ? `<p>${product.sale}</p>` : ""}
               <a href="#" role="button" class="btn btn-success buy-btn ${availabilityActionClass}">Купить</a>
               ${product.top && product.available !== 0 ? `<i class="fas fa-star top-star"></i>` : ""}
             </div>
@@ -316,5 +336,5 @@ function pileChangeToSmall() {
 }
 
 
-
+//150 – 177, 289
 
