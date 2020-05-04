@@ -159,9 +159,6 @@ function actualPrice (products) {
 
 actualPrice(data);
 
-
-//ахахаах че-то телики подорожали
-
 //console.log(data.map.has('price'));
 
 const productList = document.getElementById("product-list");
@@ -196,12 +193,29 @@ function filtered(products) {
     };
 }
 
-function sortBy(type) {
+// function sortBy(type) {
+//     return function (a, b) {
+//         if (type === "inc") {
+//             return a.price - b.price;
+//         } else if (type === "dec") {
+//             return b.price - a.price;
+//         }
+//     };
+// }
+
+function sortBy(options) {
     return function (a, b) {
-        if (type === "inc") {
-            return a.price - b.price;
-        } else if (type === "dec") {
-            return b.price - a.price;
+        // let property = options.subject;
+        // let type = options.type;
+
+        let index = options.indexOf('-');
+        let property = options.slice(0, index);
+        let type = options.slice(index+1);
+
+        if (type === 'inc') {
+            return a[property] - b[property]
+        } else if (type === 'dec') {
+            return b[property] - a[property]
         }
     };
 }

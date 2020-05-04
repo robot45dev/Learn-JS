@@ -7,8 +7,7 @@
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      crossorigin="anonymous"
-    />
+      crossorigin="anonymous"/>
     <link rel="stylesheet" href="css/style.css">
     <title>JS</title>
     
@@ -19,8 +18,14 @@
       <div class="navigation d-flex">
         <form class="mb-2 mx-3">
           <select id="sort-select">
-            <option value="inc">По возр</option>
-            <option value="dec">По убыв</option>
+<!--            &lt;!&ndash;          <option value='{"type": "inc", "subject": "price"}'>цена По возр</option>&ndash;&gt;-->
+<!--            &lt;!&ndash;          <option value='{"type": "dec", "subject": "price"}'>цена По убыв</option>&ndash;&gt;-->
+            <option value="price-inc">цена По возр</option>
+            <option value="price-dec">цена По убыв</option>
+            <option value="rating-inc">рейтинг По возр</option>
+            <option value="rating-dec">рейтинг По убыв</option>
+<!--            <option value="inc">По возр</option>-->
+<!--            <option value="dec">По убыв</option>-->
           </select>
         </form>
         <form class="mb-2 mx-3" id="filter-form">
@@ -49,8 +54,6 @@
     <script src="https://kit.fontawesome.com/889edc2e87.js" crossorigin="anonymous"></script>
   </body>
 </html>
-
-
 
 <!-- <div class="col-4">
   <div class="card">
