@@ -148,106 +148,28 @@ const data = [
     },
 ];
 
-const stockCheckbox = document.querySelector('input[name="checkbox"]');
-console.log(stockCheckbox);
-
-stockCheckbox.addEventListener("change", stock(data));
-
-function stockCheck (products) {
-    for (let element of products) {
-        if (element.sale) {
-            return;
-        }
-    }
-}
-
-function stock (products) {
-    if(stockCheckbox.checked) {
-        appendCardsToList(products.filter(stockCheck))
-    }
-}
-
-function actualPrice (products) {
-    for (let element of products) {
-        element.price *= USD;
-        // console.log(element);
-    }
-}
-
-actualPrice(data);
-
-//console.log(data.map.has('price'));
-
 const productList = document.getElementById("product-list");
 const sortSelect = document.getElementById("sort-select");
 const filterForm = document.getElementById("filter-form");
+const stockCheckbox = document.querySelector('input[name="checkbox"]');
+// const masonryBtns = document.querySelectorAll(".masonry-btn");
+const masonry = document.getElementById("masonry");
+// const pileSmall = document.getElementById('pileSmall');
+//const pileClassSearchSmall = document.querySelectorAll('.col-3');
+//const pileClassSearchLarge = document.querySelectorAll('.col-4');
 
-appendCardsToList(data);
+console.log(stockCheckbox);
 
 sortSelect.addEventListener("change", sorted(data));
 filterForm.addEventListener("submit", filtered(data));
+// pileSmall.addEventListener("click", pileChangeToSmall);
+masonry.addEventListener("click", masonryChange);
+stockCheckbox.addEventListener("change", stock(data));
 
-
-function filterBy(options) {
-    return function (el) {
-        if (options.type === "price") {  //  * USD
-            return (el.price >= options.min && el.price <= options.max);
-        }
-    };
-}
-
-
-function filtered(products) {
-    return function (e) {
-        e.preventDefault();
-        let data = new FormData(this);
-        let minValue = data.get('min');
-        let maxValue = data.get('max');
-        productList.innerHTML = "";
-        appendCardsToList(products.filter(filterBy({
-            type: 'price',   //* USD
-            min: minValue,
-            max: maxValue
-        })));
-    };
-}
-
-// function sortBy(type) {
-//     return function (a, b) {
-//         if (type === "inc") {
-//             return a.price - b.price;
-//         } else if (type === "dec") {
-//             return b.price - a.price;
-//         }
-//     };
-// }
-
-function sortBy(options) {
-    return function (a, b) {
-        // let property = options.subject;
-        // let type = options.type;
-
-        let index = options.indexOf('-');
-        let property = options.slice(0, index);
-        let type = options.slice(index+1);
-
-        if (type === 'inc') {
-            return a[property] - b[property]
-        } else if (type === 'dec') {
-            return b[property] - a[property]
-        }
-    };
-}
-
-function sorted(products) {
-    return function () {
-        productList.innerHTML = "";
-        appendCardsToList(products.sort(sortBy(this.value)));
-    };
-}
+actualPrice(data);
+appendCardsToList(data);
 
 function createCardTemplate(product) {
-
     let availability = ``;
     let availabilityColorClass = ``;
     let availabilityActionClass = ``;
@@ -276,14 +198,13 @@ function createCardTemplate(product) {
         starTags += `<i class="${starClass}"></i>`;
     }
 
-    let html =
-        `<div class="col my-3">
+    let html = `<div class="col my-3">
           <div class="card ${availabilityColorClass}">
             <img src="${product.img}" class="card-img-top" alt="${product.title}">
             <div class="card-body">
               <h5 class="card-title">${product.title}</h5>
               <p class="card-rating">Рейтинг: ${starTags}</p>
-              ${product.old_price ? `<p class="card-old-price"> Старая цена: ${formatter.format(product.old_price)}</p>` : ""}
+             ${product.old_price ? `<p class="card-old-price"> Старая цена: ${formatter.format(product.old_price)}</p>` : ""}
               <p class="card-current-price">Цена: ${formatter.format(product.price)}</p>
               <p class="card-availability ${availabilityColorClass}">Наличие: ${availability}</p>
               ${product.sale && product.available ? `<p>${product.sale}</p>` : ""}
@@ -303,38 +224,154 @@ function appendCardsToList(products) {
     }
 }
 
-// *********************
-
-const pileLarge = document.getElementById('pileLarge');
-const pileSmall = document.getElementById('pileSmall');
-
-//const pileClassSearchSmall = document.querySelectorAll('.col-3');
-//const pileClassSearchLarge = document.querySelectorAll('.col-4');
-
-pileLarge.addEventListener("click", pileChangeToLarge);
-pileSmall.addEventListener("click", pileChangeToSmall);
-
-
-function pileChangeToLarge() {
-    let pileClassSearch = document.querySelectorAll('.row-cols-4');
-    for (let element of pileClassSearch) {
-        element.classList.add('row-cols-3');
-        element.classList.remove('row-cols-4');
+function actualPrice(products) {
+    for (let element of products) {
+        element.price *= USD;
+        // console.log(element);
     }
-    pileLarge.classList.add('active');
-    pileSmall.classList.remove('active');
+}
+//console.log(data.map.has('price'));
+
+// function sortBy(type) {
+//     return function (a, b) {
+//         if (type === "inc") {
+//             return a.price - b.price;
+//         } else if (type === "dec") {
+//             return b.price - a.price;
+//         }
+//     };
+// }
+
+function sortBy(options) {
+    return function (a, b) {
+        // let property = options.subject;
+        // let type = options.type;
+
+        let index = options.indexOf("-");
+        let property = options.slice(0, index);
+        let type = options.slice(index + 1);
+
+        if (type === "inc") {
+            return a[property] - b[property];
+        } else if (type === "dec") {
+            return b[property] - a[property];
+        }
+    };
 }
 
-function pileChangeToSmall() {
-    let pileClassSearch = document.querySelectorAll('.row-cols-3');
-    for (let element of pileClassSearch) {
-        element.classList.add('row-cols-4');
-        element.classList.remove('row-cols-3');
-    }
-    pileLarge.classList.remove('active');
-    pileSmall.classList.add('active');
+function sorted(products) {
+    return function () {
+        productList.innerHTML = "";
+        appendCardsToList(products.sort(sortBy(this.value)));
+    };
 }
 
+function filterBy(options) {
+    return function (el) {
+        if (options.type === "price") {
+            //  * USD
+            return el.price >= options.min && el.price <= options.max;
+        }
+    };
+}
 
-//150 – 177, 289
+function filtered(products) {
+    return function (e) {
+        e.preventDefault();
+        let data = new FormData(this);
+        let minValue = data.get("min");
+        let maxValue = data.get("max");
+        productList.innerHTML = "";
+        appendCardsToList(
+            products.filter(
+                filterBy({
+                    type: "price", //* USD
+                    min: minValue,
+                    max: maxValue,
+                })
+            )
+        );
+    };
+}
 
+// function stockCheck (products) {
+//     let newArray = [];
+//     for (let element of products) {
+//         if (element.sale) {
+//             newArray.push(element)
+//         }
+//     }
+//     return newArray;
+// }
+
+function stockCheck(el) {
+    if (el.sale) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function stock(products) {
+    return function (e) {
+        productList.innerHTML = "";
+        if (e.target.checked) {
+            appendCardsToList(products.filter(stockCheck));
+        } else {
+            appendCardsToList(products);
+        }
+    };
+}
+
+function masonryChange(e) {
+    const btn = e.target;
+    if (btn.classList.contains("js-masonry-btn")) {
+        const pileClassSearch = document.querySelectorAll(".product-list");
+        for (let element of pileClassSearch) {
+            if (btn.dataset.action == "sm") {
+                element.classList.add("row-cols-4");
+                element.classList.remove("row-cols-3");
+
+                // $(btn).addClass('active').siblings().removeClass('active');
+            } else if (btn.dataset.action == "lg") {
+                element.classList.add("row-cols-3");
+                element.classList.remove("row-cols-4");
+
+                // $(btn).addClass('active').siblings().removeClass('active');
+            }
+        }
+        console.log(this.children);
+
+        // for (let i = 0; i < this.children.length; i++) {
+        //     const el = this.children[i];
+        //     console.log(el);
+        //     el.classList.toggle("active");
+        // }
+    }
+}
+
+// function pileChangeToSmall(e) {
+//     let pileClassSearch = document.querySelectorAll('.product-list');
+//     for (let element of pileClassSearch) {
+//         element.classList.add('row-cols-4');
+//         element.classList.remove('row-cols-3');
+//     }
+//     pileLarge.classList.remove('active');
+//     pileSmall.classList.add('active');
+// }
+
+function minMax(arr) {
+    const newArray = arr.map(function (el) {
+        return el.price;
+    });
+    let min = Math.min(...newArray);
+    let max = Math.max(...newArray);
+    return {min:min, max:max}
+}
+console.log(minMax(data));
+
+function changeInputs(minmax) {
+    minmax.min
+}
+
+changeInputs(minMax(data));
