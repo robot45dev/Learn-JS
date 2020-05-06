@@ -166,8 +166,9 @@ masonry.addEventListener("click", masonryChange);
 stockCheckbox.addEventListener("change", stock(data));
 
 // actualPrice(data);
-//appendCardsToList(data);
-sortByDefault(data);
+appendCardsToList(data);
+//sortByDefault(data);
+changeInputs(minMax(data));
 
 function createCardTemplate(product) {
     let availability = ``;
@@ -263,13 +264,13 @@ function sorted(products) {
     return function () {
         productList.innerHTML = "";
         appendCardsToList(products.sort(sortBy(this.value)));
-        //sortByDefault(appendCardsToList(products.sort(sortBy(this.value))));
+        sortByDefault(products)
     };
 }
 
 function sortByDefault(products) {
-        productList.innerHTML = "";
-        appendCardsToList(products.sort(function (a, b) {
+    productList.innerHTML = "";
+    appendCardsToList(products.sort(function (a, b) {
             return b.available - a.available
         }))
 }
@@ -378,6 +379,11 @@ function minMax(arrPrice) {
 }
 
 function changeInputs(filterValue) {
+
+    // я не стал искать их по форме, потому что на сколько я понимаю внутри формы
+    //input-ы все равно пришлось бы отделять по name например,
+    // а по скольку у них есть лейблы то уже есть id, хз есть ли смысл усложнять
+
     const minInput = document.getElementById('filter-min');
     const maxInput = document.getElementById('filter-max');
 
@@ -390,8 +396,11 @@ function changeInputs(filterValue) {
     maxInput.value = maxInput.max;
 }
 
-changeInputs(minMax(data));
-
 
 // идея присутствия сортировки по умолчaнию всегда - добавить sortDefault в sorted;
+
+// куда я ее только не тыкал, пока что ниче не заработало,
 //
+// я не совсем понимаю саму концепцию, у нас ведь все функции сортировки стирают
+//страницу и генерируют заново, как тогда применить 2 вида сортировки перед генерацией страницы,
+// засовывать sortByDefault еще на этапе sortBy?
