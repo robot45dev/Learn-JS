@@ -20,30 +20,32 @@
             <select id="sort-select">
                 <!--            &lt;!&ndash;          <option value='{"type": "inc", "subject": "price"}'>цена По возр</option>&ndash;&gt;-->
                 <!--            &lt;!&ndash;          <option value='{"type": "dec", "subject": "price"}'>цена По убыв</option>&ndash;&gt;-->
-                <option value="price-inc">цена По возр</option>
-                <option value="price-dec">цена По убыв</option>
-                <option value="rating-inc">рейтинг По возр</option>
-                <option value="rating-dec">рейтинг По убыв</option>
+                <option value="price-inc">Цена по возрастанию</option>
+                <option value="price-dec">Цена по убыванию</option>
+                <option value="rating-inc">Рейтинг по возрастанию</option>
+                <option value="rating-dec">Рейтинг по убыванию</option>
                 <!--            <option value="inc">По возр</option>-->
                 <!--            <option value="dec">По убыв</option>-->
             </select>
         </form>
         <form class="mb-2 mx-3" id="filter-form">
-            от<input
+            <label for="filter-min"> От </label>
+            <input
                 id="filter-min"
                 type="number"
                 min="0"
-                max="18122"
+                max="1"
                 name="min"
-                value="8937"
+                value=""
         />
-            до<input
+            <label for="filter-max"> До </label>
+            <input
                 id="filter-max"
                 type="number"
                 min="1"
-                max="18123"
+                max="1"
                 name="max"
-                value="18123"
+                value=""
         />
             <button type="submit">OK!</button>
         </form>

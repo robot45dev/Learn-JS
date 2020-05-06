@@ -31,7 +31,7 @@ const data = [
         price: 623,
         available: 2,
         rating: 2,
-        sale: "Подарок пульт",
+        sale: "Подарок – к Вам не прийдут коллекторы если оформите рассрочку",
     },
     {
         id: 3,
@@ -40,7 +40,7 @@ const data = [
         img:
             "https://i2.rozetka.ua/goods/10317062/samsung_ue43n5000auxua_images_10317062073.jpg",
         old_price: 650,
-        price: 500,
+        price: 535,
         available: 0,
         rating: 0.5,
         top: true,
@@ -97,7 +97,7 @@ const data = [
             "https://i2.rozetka.ua/goods/10317062/samsung_ue43n5000auxua_images_10317062073.jpg",
         old_price: 669,
         price: 623,
-        available: 0,
+        available: 1,
         rating: 2,
         sale: "Подарок пульт",
     },
@@ -130,9 +130,10 @@ const data = [
             "Телевизор Samsung UE43N5000AUXUA + в подарок подписка ROZETKA PREMIUM за 1 гривну!",
         img:
             "https://i2.rozetka.ua/goods/10317062/samsung_ue43n5000auxua_images_10317062073.jpg",
-        price: 325,
+        price: 355,
         available: 100,
         rating: 1,
+        sale: "Подарок – провод питания",
     },
     {
         id: 6,
@@ -155,10 +156,8 @@ const stockCheckbox = document.querySelector('input[name="checkbox"]');
 // const masonryBtns = document.querySelectorAll(".masonry-btn");
 const masonry = document.getElementById("masonry");
 // const pileSmall = document.getElementById('pileSmall');
-//const pileClassSearchSmall = document.querySelectorAll('.col-3');
-//const pileClassSearchLarge = document.querySelectorAll('.col-4');
-
-console.log(stockCheckbox);
+// const pileClassSearchSmall = document.querySelectorAll('.col-3');
+// const pileClassSearchLarge = document.querySelectorAll('.col-4');
 
 sortSelect.addEventListener("change", sorted(data));
 filterForm.addEventListener("submit", filtered(data));
@@ -166,8 +165,9 @@ filterForm.addEventListener("submit", filtered(data));
 masonry.addEventListener("click", masonryChange);
 stockCheckbox.addEventListener("change", stock(data));
 
-actualPrice(data);
-appendCardsToList(data);
+// actualPrice(data);
+//appendCardsToList(data);
+sortByDefault(data);
 
 function createCardTemplate(product) {
     let availability = ``;
@@ -204,8 +204,8 @@ function createCardTemplate(product) {
             <div class="card-body">
               <h5 class="card-title">${product.title}</h5>
               <p class="card-rating">Рейтинг: ${starTags}</p>
-             ${product.old_price ? `<p class="card-old-price"> Старая цена: ${formatter.format(product.old_price)}</p>` : ""}
-              <p class="card-current-price">Цена: ${formatter.format(product.price)}</p>
+             ${product.old_price ? `<p class="card-old-price"> Старая цена: ${formatter.format(product.old_price * USD)}</p>` : ""}
+              <p class="card-current-price">Цена: ${formatter.format(product.price * USD)}</p>
               <p class="card-availability ${availabilityColorClass}">Наличие: ${availability}</p>
               ${product.sale && product.available ? `<p>${product.sale}</p>` : ""}
               <a href="#" role="button" class="btn btn-success buy-btn ${availabilityActionClass}">Купить</a>
@@ -223,13 +223,13 @@ function appendCardsToList(products) {
         productList.insertAdjacentHTML("beforeend", template);
     }
 }
+//
+// function actualPrice(products) {
+//     for (let element of products) {
+//         element.price *= USD;
+//     }
+// }
 
-function actualPrice(products) {
-    for (let element of products) {
-        element.price *= USD;
-        // console.log(element);
-    }
-}
 //console.log(data.map.has('price'));
 
 // function sortBy(type) {
@@ -263,13 +263,20 @@ function sorted(products) {
     return function () {
         productList.innerHTML = "";
         appendCardsToList(products.sort(sortBy(this.value)));
+        //sortByDefault(appendCardsToList(products.sort(sortBy(this.value))));
     };
+}
+
+function sortByDefault(products) {
+        productList.innerHTML = "";
+        appendCardsToList(products.sort(function (a, b) {
+            return b.available - a.available
+        }))
 }
 
 function filterBy(options) {
     return function (el) {
         if (options.type === "price") {
-            //  * USD
             return el.price >= options.min && el.price <= options.max;
         }
     };
@@ -279,13 +286,13 @@ function filtered(products) {
     return function (e) {
         e.preventDefault();
         let data = new FormData(this);
-        let minValue = data.get("min");
-        let maxValue = data.get("max");
+        let minValue = (data.get("min")) / USD;
+        let maxValue = (data.get("max")) / USD;
         productList.innerHTML = "";
         appendCardsToList(
             products.filter(
                 filterBy({
-                    type: "price", //* USD
+                    type: "price",
                     min: minValue,
                     max: maxValue,
                 })
@@ -326,21 +333,21 @@ function stock(products) {
 function masonryChange(e) {
     const btn = e.target;
     if (btn.classList.contains("js-masonry-btn")) {
-        const pileClassSearch = document.querySelectorAll(".product-list");
-        for (let element of pileClassSearch) {
+        const tileClassSearch = document.querySelectorAll(".product-list");
+        for (let element of tileClassSearch) {
             if (btn.dataset.action == "sm") {
                 element.classList.add("row-cols-4");
                 element.classList.remove("row-cols-3");
 
-                // $(btn).addClass('active').siblings().removeClass('active');
+                $(btn).addClass('active').siblings().removeClass('active');
             } else if (btn.dataset.action == "lg") {
                 element.classList.add("row-cols-3");
                 element.classList.remove("row-cols-4");
 
-                // $(btn).addClass('active').siblings().removeClass('active');
+                $(btn).addClass('active').siblings().removeClass('active');
             }
         }
-        console.log(this.children);
+        // console.log(this.children);
 
         // for (let i = 0; i < this.children.length; i++) {
         //     const el = this.children[i];
@@ -360,18 +367,31 @@ function masonryChange(e) {
 //     pileSmall.classList.add('active');
 // }
 
-function minMax(arr) {
-    const newArray = arr.map(function (el) {
-        return el.price;
+function minMax(arrPrice) {
+    const newArray = arrPrice.map(function (element) {
+        return element.price;
     });
     let min = Math.min(...newArray);
     let max = Math.max(...newArray);
+
     return {min:min, max:max}
 }
-console.log(minMax(data));
 
-function changeInputs(minmax) {
-    minmax.min
+function changeInputs(filterValue) {
+    const minInput = document.getElementById('filter-min');
+    const maxInput = document.getElementById('filter-max');
+
+    minInput.min = Math.round(filterValue.min * USD) - 1;
+    minInput.max = Math.round(filterValue.max * USD);
+    minInput.value = minInput.min;
+
+    maxInput.min = Math.round(filterValue.min * USD);
+    maxInput.max = Math.round(filterValue.max * USD) + 1;
+    maxInput.value = maxInput.max;
 }
 
 changeInputs(minMax(data));
+
+
+// идея присутствия сортировки по умолчaнию всегда - добавить sortDefault в sorted;
+//

@@ -1,9 +1,13 @@
+html {
+    font-size: 13px;
+}
+
 .card-old-price{
     text-decoration: line-through;
     color: #ccc;
 }
 .card-old-price+.card-current-price{
-    color: red;
+    color: #FF3333;
 }
 
 .card {
@@ -11,9 +15,14 @@
     position: relative;
 }
 
-.card.notInStock,
-.card.notInStock i,
-.card-current-price {
+.card>img {
+    height: 20rem;
+    object-fit: contain;
+}
+
+.card.remainZero,
+.card.remainZero i,
+.card.remainZero .card-current-price {
     color: grey !important;
 }
 
@@ -38,7 +47,7 @@
 }
 
 .card-availability.remainSmall {
-    color: gold;
+    color: #FF3333;
 }
 
 .card-availability.remainLot {
