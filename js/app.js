@@ -166,8 +166,8 @@ masonry.addEventListener("click", masonryChange);
 stockCheckbox.addEventListener("change", stock(data));
 
 // actualPrice(data);
-appendCardsToList(data);
-//sortByDefault(data);
+//appendCardsToList(data);
+sortByDefault(data);
 changeInputs(minMax(data));
 
 function createCardTemplate(product) {
@@ -260,11 +260,35 @@ function sortBy(options) {
     };
 }
 
+// function sorted(products) {
+//     return function () {
+//         productList.innerHTML = "";
+//         appendCardsToList(products.sort(sortBy(this.value)));
+//         sortByDefault(products)
+//     };
+// }
+
 function sorted(products) {
     return function () {
+        //основная сортировка по нужному типу,благодаря обёртке sortBy()
+        products.sort(sortBy(this.value));
+        //дефолтная сортировка по наличию (обёртка не нужна)
+        products.sort(function (a, b) {
+            //часть проблемы у тебя было, что тебе нужна "хитрая" сортировка,
+            //тебе же нужно чтобы только у которых наличие == 0 шли в конец,
+            //а простая сортировка (b-a) сортирует все товары по кол-ву
+            //ты по факту должен придумать целиком кастомную сортировку, котороя
+            //не вписывается в стандартные (по увелич., по уменьш.)
+            if (b.available-a.available == b.available) {
+                return 1;
+            } else if(b.available-a.available == -a.available){
+                return -1;
+            } else {
+                return 0;
+            }
+        });
         productList.innerHTML = "";
-        appendCardsToList(products.sort(sortBy(this.value)));
-        sortByDefault(products)
+        appendCardsToList(products);
     };
 }
 
@@ -341,11 +365,20 @@ function masonryChange(e) {
                 element.classList.remove("row-cols-3");
 
                 $(btn).addClass('active').siblings().removeClass('active');
+                // btn.classList.add('active');
+                // btn.prototype.filter.call(tileClassSearch.parentNode.children, function(child){
+                //     child.classList.remove('active');
+                // });
+
             } else if (btn.dataset.action == "lg") {
                 element.classList.add("row-cols-3");
                 element.classList.remove("row-cols-4");
 
                 $(btn).addClass('active').siblings().removeClass('active');
+                // btn.classList.add('active');
+                // btn.prototype.filter.call(tileClassSearch.parentNode.children, function(child){
+                //     child.classList.remove('active');
+                // });
             }
         }
         // console.log(this.children);
@@ -358,14 +391,14 @@ function masonryChange(e) {
     }
 }
 
-// function pileChangeToSmall(e) {
-//     let pileClassSearch = document.querySelectorAll('.product-list');
-//     for (let element of pileClassSearch) {
+// function tileChangeToSmall(e) {
+//     let tileClassSearch = document.querySelectorAll('.product-list');
+//     for (let element of tileClassSearch) {
 //         element.classList.add('row-cols-4');
 //         element.classList.remove('row-cols-3');
 //     }
-//     pileLarge.classList.remove('active');
-//     pileSmall.classList.add('active');
+//     tileLarge.classList.remove('active');
+//     tileSmall.classList.add('active');
 // }
 
 function minMax(arrPrice) {
@@ -404,3 +437,10 @@ function changeInputs(filterValue) {
 // я не совсем понимаю саму концепцию, у нас ведь все функции сортировки стирают
 //страницу и генерируют заново, как тогда применить 2 вида сортировки перед генерацией страницы,
 // засовывать sortByDefault еще на этапе sortBy?
+
+let fruits = []; // создаём массив
+console.log(fruits);
+fruits[99999] = 5; // создаём свойство с индексом, намного превышающим длину массива
+console.log(fruits);
+fruits.age = 25;
+console.log(fruits);
