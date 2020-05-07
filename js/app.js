@@ -149,6 +149,10 @@ const data = [
     },
 ];
 
+if (!localStorage.wishlist) {
+    localStorage.wishlist = JSON.stringify({})
+}
+
 const productList = document.getElementById("product-list");
 const sortSelect = document.getElementById("sort-select");
 const filterForm = document.getElementById("filter-form");
@@ -158,7 +162,7 @@ const masonry = document.getElementById("masonry");
 // const pileSmall = document.getElementById('pileSmall');
 // const pileClassSearchSmall = document.querySelectorAll('.col-3');
 // const pileClassSearchLarge = document.querySelectorAll('.col-4');
-const wishList = JSON.parse(localStorage.wishlist);
+
 
 sortSelect.addEventListener("change", sorted(data));
 filterForm.addEventListener("submit", filtered(data));
@@ -167,17 +171,16 @@ masonry.addEventListener("click", masonryChange);
 stockCheckbox.addEventListener("change", stock(data));
 productList.addEventListener("click", wishListAddRemove);
 
-if (!localStorage.wishlist) {
-    localStorage.wishlist = JSON.stringify({})
-}
+const wishList = JSON.parse(localStorage.wishlist);
 
 function wishListAddRemove(event) {
+    // let heart = wishList[event.target.dataset.id] –– ПОЧЕМУ НЕ РАБОТАЕТ?
         if (event.target.classList.contains('js-wish-btn')) {
-            if (event.target.classList.contains('far')) {
+            if (!wishList[event.target.dataset.id]) {
                 wishList[event.target.dataset.id] = true;
                 event.target.classList.remove('far');
                 event.target.classList.add('fas');
-            } else if (event.target.classList.contains('fas')) {
+            } else if (wishList[event.target.dataset.id]) {
                 delete wishList[event.target.dataset.id];
                 event.target.classList.add('far');
                 event.target.classList.remove('fas');
@@ -186,15 +189,12 @@ function wishListAddRemove(event) {
         }
     }
 
-
 console.log(JSON.parse(localStorage.wishlist));
 
 // actualPrice(data);
 // appendCardsToList(data);
 sortByDefault(data);
 changeInputs(minMax(data));
-
-
 
 function createCardTemplate(product) {
     let availability = ``;
@@ -236,7 +236,7 @@ function createCardTemplate(product) {
               <p class="card-availability ${availabilityColorClass}">Наличие: ${availability}</p>
               ${product.sale && product.available ? `<p>${product.sale}</p>` : ""}
               <a href="#" role="button" class="btn btn-success buy-btn mb-2 ${availabilityActionClass}">Купить</a>
-              <button data-id="${product.id}" class="btn btn-clear far fa-heart js-wish-btn"></button>
+              <button data-id="${product.id}" class="btn btn-clear ${wishList[product.id] ? 'fas' : 'far'} fa-heart js-wish-btn"></button>
               ${product.top && product.available !== 0 ? `<i class="fas fa-star top-star"></i>` : ""}
             </div>
           </div>
@@ -250,14 +250,6 @@ function appendCardsToList(products) {
         let template = createCardTemplate(element);
         productList.insertAdjacentHTML("beforeend", template);
     }
-    // if (Object.keys(wishList)) {
-        // Object.keys(wishList).forEach(function () {
-        // })
-
-        // Object.keys(wishList).filter(function (number) {
-        //
-        // }
-    // }
 }
 
 // function actualPrice(products) {
