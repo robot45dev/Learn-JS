@@ -79,7 +79,7 @@ const data = [
         sale: "Подарок пульт",
     },
     {
-        id: 1,
+        id: 11,
         title:
             "Телевизор Samsung UE43N5000AUXUA + в подарок подписка ROZETKA PREMIUM за 1 гривну!",
         img:
@@ -90,7 +90,7 @@ const data = [
         top: true,
     },
     {
-        id: 2,
+        id: 12,
         title:
             "Телевизор Samsung UE43N5000AUXUA + в подарок подписка ROZETKA PREMIUM за 1 гривну!",
         img:
@@ -102,7 +102,7 @@ const data = [
         sale: "Подарок пульт",
     },
     {
-        id: 3,
+        id: 33,
         title:
             "Телевизор Samsung UE43N5000AUXUA + в подарок подписка ROZETKA PREMIUM за 1 гривну!",
         img:
@@ -114,7 +114,7 @@ const data = [
         top: true,
     },
     {
-        id: 4,
+        id: 42,
         title:
             "Телевизор Samsung UE43N5000AUXUA + в подарок подписка ROZETKA PREMIUM за 1 гривну!",
         img:
@@ -125,7 +125,7 @@ const data = [
         top: true,
     },
     {
-        id: 5,
+        id: 54,
         title:
             "Телевизор Samsung UE43N5000AUXUA + в подарок подписка ROZETKA PREMIUM за 1 гривну!",
         img:
@@ -136,7 +136,7 @@ const data = [
         sale: "Подарок – провод питания",
     },
     {
-        id: 6,
+        id: 65,
         title:
             "Телевизор Samsung UE43N5000AUXUA + в подарок подписка ROZETKA PREMIUM за 1 гривну!",
         img:
@@ -158,17 +158,43 @@ const masonry = document.getElementById("masonry");
 // const pileSmall = document.getElementById('pileSmall');
 // const pileClassSearchSmall = document.querySelectorAll('.col-3');
 // const pileClassSearchLarge = document.querySelectorAll('.col-4');
+const wishList = JSON.parse(localStorage.wishlist);
 
 sortSelect.addEventListener("change", sorted(data));
 filterForm.addEventListener("submit", filtered(data));
 // pileSmall.addEventListener("click", pileChangeToSmall);
 masonry.addEventListener("click", masonryChange);
 stockCheckbox.addEventListener("change", stock(data));
+productList.addEventListener("click", wishListAddRemove);
+
+if (!localStorage.wishlist) {
+    localStorage.wishlist = JSON.stringify({})
+}
+
+function wishListAddRemove(event) {
+        if (event.target.classList.contains('js-wish-btn')) {
+            if (event.target.classList.contains('far')) {
+                wishList[event.target.dataset.id] = true;
+                event.target.classList.remove('far');
+                event.target.classList.add('fas');
+            } else if (event.target.classList.contains('fas')) {
+                delete wishList[event.target.dataset.id];
+                event.target.classList.add('far');
+                event.target.classList.remove('fas');
+            }
+            localStorage.wishlist = JSON.stringify(wishList);
+        }
+    }
+
+
+console.log(JSON.parse(localStorage.wishlist));
 
 // actualPrice(data);
-//appendCardsToList(data);
+// appendCardsToList(data);
 sortByDefault(data);
 changeInputs(minMax(data));
+
+
 
 function createCardTemplate(product) {
     let availability = ``;
@@ -209,7 +235,8 @@ function createCardTemplate(product) {
               <p class="card-current-price">Цена: ${formatter.format(product.price * USD)}</p>
               <p class="card-availability ${availabilityColorClass}">Наличие: ${availability}</p>
               ${product.sale && product.available ? `<p>${product.sale}</p>` : ""}
-              <a href="#" role="button" class="btn btn-success buy-btn ${availabilityActionClass}">Купить</a>
+              <a href="#" role="button" class="btn btn-success buy-btn mb-2 ${availabilityActionClass}">Купить</a>
+              <button data-id="${product.id}" class="btn btn-clear far fa-heart js-wish-btn"></button>
               ${product.top && product.available !== 0 ? `<i class="fas fa-star top-star"></i>` : ""}
             </div>
           </div>
@@ -223,15 +250,21 @@ function appendCardsToList(products) {
         let template = createCardTemplate(element);
         productList.insertAdjacentHTML("beforeend", template);
     }
+    // if (Object.keys(wishList)) {
+        // Object.keys(wishList).forEach(function () {
+        // })
+
+        // Object.keys(wishList).filter(function (number) {
+        //
+        // }
+    // }
 }
-//
+
 // function actualPrice(products) {
 //     for (let element of products) {
 //         element.price *= USD;
 //     }
 // }
-
-//console.log(data.map.has('price'));
 
 // function sortBy(type) {
 //     return function (a, b) {
@@ -264,7 +297,6 @@ function sortBy(options) {
 //     return function () {
 //         productList.innerHTML = "";
 //         appendCardsToList(products.sort(sortBy(this.value)));
-//         sortByDefault(products)
 //     };
 // }
 
@@ -279,9 +311,9 @@ function sorted(products) {
             //а простая сортировка (b-a) сортирует все товары по кол-ву
             //ты по факту должен придумать целиком кастомную сортировку, котороя
             //не вписывается в стандартные (по увелич., по уменьш.)
-            if (b.available-a.available == b.available) {
+            if (b.available - a.available == b.available) {
                 return 1;
-            } else if(b.available-a.available == -a.available){
+            } else if (b.available - a.available == -a.available) {
                 return -1;
             } else {
                 return 0;
@@ -294,9 +326,11 @@ function sorted(products) {
 
 function sortByDefault(products) {
     productList.innerHTML = "";
-    appendCardsToList(products.sort(function (a, b) {
-            return b.available - a.available
-        }))
+    appendCardsToList(
+        products.sort(function (a, b) {
+            return b.available - a.available;
+        })
+    );
 }
 
 function filterBy(options) {
@@ -311,8 +345,8 @@ function filtered(products) {
     return function (e) {
         e.preventDefault();
         let data = new FormData(this);
-        let minValue = (data.get("min")) / USD;
-        let maxValue = (data.get("max")) / USD;
+        let minValue = data.get("min") / USD;
+        let maxValue = data.get("max") / USD;
         productList.innerHTML = "";
         appendCardsToList(
             products.filter(
@@ -355,39 +389,24 @@ function stock(products) {
     };
 }
 
-function masonryChange(e) {
-    const btn = e.target;
+function masonryChange(event) {
+    const btn = event.target;
     if (btn.classList.contains("js-masonry-btn")) {
-        const tileClassSearch = document.querySelectorAll(".product-list");
-        for (let element of tileClassSearch) {
-            if (btn.dataset.action == "sm") {
-                element.classList.add("row-cols-4");
-                element.classList.remove("row-cols-3");
+        btn.classList.add("active");
+        const siblings = [...btn.parentNode.children].filter(function (child) {
+            return child != btn;
+        });
+        siblings.forEach(e =>{
+            e.classList.remove("active");
+        })
 
-                $(btn).addClass('active').siblings().removeClass('active');
-                // btn.classList.add('active');
-                // btn.prototype.filter.call(tileClassSearch.parentNode.children, function(child){
-                //     child.classList.remove('active');
-                // });
-
-            } else if (btn.dataset.action == "lg") {
-                element.classList.add("row-cols-3");
-                element.classList.remove("row-cols-4");
-
-                $(btn).addClass('active').siblings().removeClass('active');
-                // btn.classList.add('active');
-                // btn.prototype.filter.call(tileClassSearch.parentNode.children, function(child){
-                //     child.classList.remove('active');
-                // });
-            }
+        if (btn.dataset.action == "sm") {
+            productList.classList.add("row-cols-4");
+            productList.classList.remove("row-cols-3");
+        } else if (btn.dataset.action == "lg") {
+            productList.classList.add("row-cols-3");
+            productList.classList.remove("row-cols-4");
         }
-        // console.log(this.children);
-
-        // for (let i = 0; i < this.children.length; i++) {
-        //     const el = this.children[i];
-        //     console.log(el);
-        //     el.classList.toggle("active");
-        // }
     }
 }
 
@@ -408,17 +427,12 @@ function minMax(arrPrice) {
     let min = Math.min(...newArray);
     let max = Math.max(...newArray);
 
-    return {min:min, max:max}
+    return { min: min, max: max };
 }
 
 function changeInputs(filterValue) {
-
-    // я не стал искать их по форме, потому что на сколько я понимаю внутри формы
-    //input-ы все равно пришлось бы отделять по name например,
-    // а по скольку у них есть лейблы то уже есть id, хз есть ли смысл усложнять
-
-    const minInput = document.getElementById('filter-min');
-    const maxInput = document.getElementById('filter-max');
+    const minInput = document.getElementById("filter-min");
+    const maxInput = document.getElementById("filter-max");
 
     minInput.min = Math.round(filterValue.min * USD) - 1;
     minInput.max = Math.round(filterValue.max * USD);
@@ -430,17 +444,3 @@ function changeInputs(filterValue) {
 }
 
 
-// идея присутствия сортировки по умолчaнию всегда - добавить sortDefault в sorted;
-
-// куда я ее только не тыкал, пока что ниче не заработало,
-//
-// я не совсем понимаю саму концепцию, у нас ведь все функции сортировки стирают
-//страницу и генерируют заново, как тогда применить 2 вида сортировки перед генерацией страницы,
-// засовывать sortByDefault еще на этапе sortBy?
-
-let fruits = []; // создаём массив
-console.log(fruits);
-fruits[99999] = 5; // создаём свойство с индексом, намного превышающим длину массива
-console.log(fruits);
-fruits.age = 25;
-console.log(fruits);

@@ -61,3 +61,11 @@ html {
     top: 5px;
     right: 5px;
 }
+
+.js-wish-btn {
+    font-size: 1.5rem;
+}
+
+.js-wish-btn.fas {
+    color: #FF3333;
+}
