@@ -1,90 +1,128 @@
 <!DOCTYPE html>
 <html lang="ru">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
-            rel="stylesheet"
-            href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-            crossorigin="anonymous"
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+      integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+      crossorigin="anonymous"
     />
     <link rel="stylesheet" href="css/style.css" />
     <title>JS</title>
-</head>
-<body>
-<div class="container">
-    <h1 class="pt-3">Список товаров</h1>
-    <div class="navigation d-flex">
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="pt-3">Список товаров</h1>
+      <div class="navigation d-flex">
         <form class="mb-2 mx-3">
-            <select id="sort-select">
-                <!--            &lt;!&ndash;          <option value='{"type": "inc", "subject": "price"}'>цена По возр</option>&ndash;&gt;-->
-                <!--            &lt;!&ndash;          <option value='{"type": "dec", "subject": "price"}'>цена По убыв</option>&ndash;&gt;-->
-                <option value="price-inc">Цена по возрастанию</option>
-                <option value="price-dec">Цена по убыванию</option>
-                <option value="rating-inc">Рейтинг по возрастанию</option>
-                <option value="rating-dec">Рейтинг по убыванию</option>
-                <!--            <option value="inc">По возр</option>-->
-                <!--            <option value="dec">По убыв</option>-->
-            </select>
+          <select id="sort-select">
+            <!--            &lt;!&ndash;          <option value='{"type": "inc", "subject": "price"}'>цена По возр</option>&ndash;&gt;-->
+            <!--            &lt;!&ndash;          <option value='{"type": "dec", "subject": "price"}'>цена По убыв</option>&ndash;&gt;-->
+            <option value="price-inc">Цена по возрастанию</option>
+            <option value="price-dec">Цена по убыванию</option>
+            <option value="rating-inc">Рейтинг по возрастанию</option>
+            <option value="rating-dec">Рейтинг по убыванию</option>
+            <!--            <option value="inc">По возр</option>-->
+            <!--            <option value="dec">По убыв</option>-->
+          </select>
         </form>
         <form class="mb-2 mx-3" id="filter-form">
-            <label for="filter-min"> От </label>
-            <input
-                id="filter-min"
-                type="number"
-                min="0"
-                max="1"
-                name="min"
-                value=""
-        />
-            <label for="filter-max"> До </label>
-            <input
-                id="filter-max"
-                type="number"
-                min="1"
-                max="1"
-                name="max"
-                value=""
-        />
-            <button type="submit">OK!</button>
+          <label for="filter-min"> От </label>
+          <input
+            id="filter-min"
+            type="number"
+            min="0"
+            max="1"
+            name="min"
+            value=""
+          />
+          <label for="filter-max"> До </label>
+          <input
+            id="filter-max"
+            type="number"
+            min="1"
+            max="1"
+            name="max"
+            value=""
+          />
+          <button type="submit">OK!</button>
         </form>
         <!-- <button class="btn btn btn-outline-success mx-3 active" id="pileLarge">P1</button>
         <button class="btn btn btn-outline-primary mx-3" id="pileSmall">P2</button> -->
         <div id="masonry">
-            <button
-                    data-action="lg"
-                    class="js-masonry-btn btn btn-outline-success mx-3 active">P1
-            </button>
-            <button
-                    data-action="sm"
-                    class="js-masonry-btn btn btn-outline-primary mx-3">P2
-            </button>
+          <button
+            id="bttn"
+            data-action="lg"
+            class="js-masonry-btn btn btn-outline-success mx-3 active"
+          >
+            P1
+          </button>
+          <button
+            data-action="sm"
+            class="js-masonry-btn btn btn-outline-primary mx-3"
+          >
+            P2
+          </button>
         </div>
-        <form>
-            <input type="checkbox" name="checkbox" id="stock" />
-            <label for="stock">Акция</label>
+        <form class="mr-3">
+          <input type="checkbox" name="checkbox" id="stock" />
+          <label for="stock">Акция</label>
         </form>
+        <div class="wish-list">
+          <span id="wishCounter"></span>
+          <i class="far fa-heart"></i>
+        </div>
+      </div>
+      <div class="row row-cols-3 product-list" id="product-list"></div>
     </div>
-    <div class="row row-cols-3 product-list" id="product-list"></div>
-</div>
-<script src="js/jquery.js"></script>
-<script
-        src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"
-></script>
-<script
-        src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"
-></script>
-<script src="js/app.js"></script>
-<script
-        src="https://kit.fontawesome.com/889edc2e87.js"
-        crossorigin="anonymous"
-></script>
-</body>
+
+    <div class="container">
+      <div class="cart card  my-5 py-5" id="cart">
+        <div class="cart-header card-header p-3">
+          <div class="row">
+            <div class="col-1 cart-header-order">#</div>
+            <div class="col-1 cart-header-img">Img</div>
+            <div class="col-5 cart-header-title">Title</div>
+            <div class="col-1 cart-header-count">Count</div>
+            <div class="col-1 cart-header-price">Price</div>
+            <div class="col-2 cart-header-sum">Sum</div>
+            <div class="col-1 cart-header-remove">Remove</div>
+          </div>
+        </div>
+        <div class="cart-body p-3" id="cart-body">
+          <!-- <div class="row cart-body-row">
+            <div class="col-1 cart-body-order">#</div>
+            <div class="col-1 cart-body-img"><img src="" alt=""></div>
+            <div class="col-5 cart-body-title"><h6></h6></div>
+            <div class="col-1 cart-body-count"><input type="number" class="w-100"></div>
+            <div class="col-1 cart-body-price">Price</div>
+            <div class="col-2 cart-body-sum">Sum</div>
+            <div class="col-1 cart-body-remove"><button class="btn btn-secondary">&times;</button></div>
+          </div> -->
+        </div>
+        <div class="col- cart-footer"></div>
+      </div>
+    </div>
+    <script src="js/jquery.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+      integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/app.js"></script>
+    <script
+      async
+      src="https://kit.fontawesome.com/889edc2e87.js"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
 
 <!-- <div class="col-4">
