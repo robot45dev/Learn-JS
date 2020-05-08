@@ -89,6 +89,7 @@ html {
 .wish-list {
     font-size: 2rem;
     position: relative;
+    color: #939393;
 }
 
 .wish-list>span {
@@ -115,6 +116,9 @@ html {
     transition: .7s;
 }
 
+.wish-list>span:not(:empty) ~ i {
+    color: #000;
+}
 /*.card::before {*/
 /*    position: absolute;*/
 /*    left: -8px;*/
