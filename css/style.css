@@ -92,6 +92,10 @@ html {
     color: #939393;
 }
 
+.wish-list>i {
+    transition: .7s;
+}
+
 .wish-list>span {
     position: absolute;
     display: flex;
@@ -104,16 +108,15 @@ html {
     font-size: 1rem;
     color: #fff;
     border-radius: 50%;
-    background-color: #FF3333;
+    transition: .7s;
 }
 
 .wish-list>span:empty {
     background-color: #fff;
-    transition: .7s;
 }
 
 .wish-list>span:not(:empty) {
-    transition: .7s;
+    background-color: #FF3333;
 }
 
 .wish-list>span:not(:empty) ~ i {
