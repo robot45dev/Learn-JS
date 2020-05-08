@@ -162,6 +162,7 @@ const masonry = document.getElementById("masonry");
 // const pileSmall = document.getElementById('pileSmall');
 // const pileClassSearchSmall = document.querySelectorAll('.col-3');
 // const pileClassSearchLarge = document.querySelectorAll('.col-4');
+const wishList = JSON.parse(localStorage.wishlist);
 
 
 sortSelect.addEventListener("change", sorted(data));
@@ -171,7 +172,6 @@ masonry.addEventListener("click", masonryChange);
 stockCheckbox.addEventListener("change", stock(data));
 productList.addEventListener("click", wishListAddRemove);
 
-const wishList = JSON.parse(localStorage.wishlist);
 
 function wishListAddRemove(event) {
     // let heart = wishList[event.target.dataset.id] –– ПОЧЕМУ НЕ РАБОТАЕТ?
@@ -187,14 +187,31 @@ function wishListAddRemove(event) {
             }
             localStorage.wishlist = JSON.stringify(wishList);
         }
+        wishCounter(wishList);
     }
 
-console.log(JSON.parse(localStorage.wishlist));
+function wishCounter (products) {
+    let counter = document.getElementById('wishCounter');
+    counter.innerHTML = "";
+    if (!Object.keys(products).length) {
+        counter.innerHTML = "";
+    } else if (Object.keys(products).length) {
+        // counter.insertAdjacentHTML('afterbegin', Object.keys(products).length);
+        counter.innerHTML = Object.keys(products).length;
+    }
+    // function ff() {
+    //     for (let element of Object.keys(products)) {
+    //         console.log(Number.parseInt(element));
+    //     }
+    //     return new Array(element);
+    // }
+}
 
 // actualPrice(data);
 // appendCardsToList(data);
 sortByDefault(data);
 changeInputs(minMax(data));
+wishCounter(wishList);
 
 function createCardTemplate(product) {
     let availability = ``;
@@ -235,8 +252,10 @@ function createCardTemplate(product) {
               <p class="card-current-price">Цена: ${formatter.format(product.price * USD)}</p>
               <p class="card-availability ${availabilityColorClass}">Наличие: ${availability}</p>
               ${product.sale && product.available ? `<p>${product.sale}</p>` : ""}
-              <a href="#" role="button" class="btn btn-success buy-btn mb-2 ${availabilityActionClass}">Купить</a>
-              <button data-id="${product.id}" class="btn btn-clear ${wishList[product.id] ? 'fas' : 'far'} fa-heart js-wish-btn"></button>
+              <div class="buttons">
+                  <a href="#" role="button" class="btn btn-success buy-btn mb-2 ${availabilityActionClass}">Купить</a>
+                  <button data-id="${product.id}" class="btn btn-clear ${wishList[product.id] ? 'fas' : 'far'} fa-heart js-wish-btn"></button>
+              </div>
               ${product.top && product.available !== 0 ? `<i class="fas fa-star top-star"></i>` : ""}
             </div>
           </div>
@@ -248,7 +267,7 @@ function createCardTemplate(product) {
 function appendCardsToList(products) {
     for (let element of products) {
         let template = createCardTemplate(element);
-        productList.insertAdjacentHTML("beforeend", template);
+        productList.insertAdjacentHTML('beforeend', template);
     }
 }
 
