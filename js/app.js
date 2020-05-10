@@ -173,25 +173,37 @@ productList.addEventListener("click", wishListAddRemove);
 
 function wishListAddRemove(event) {
     // let heart = wishList[event.target.dataset.id] –– ПОЧЕМУ НЕ РАБОТАЕТ?
-    if (event.target.classList.contains("js-wish-btn")) {
-        if (!wishList[event.target.dataset.id]) {
-            wishList[event.target.dataset.id] = true;
-            event.target.classList.remove("far");
-            event.target.classList.add("fas");
-        } else {
-            delete wishList[event.target.dataset.id];
-            event.target.classList.add("far");
-            event.target.classList.remove("fas");
+        if (event.target.classList.contains('js-wish-btn')) {
+            if (!wishList[event.target.dataset.id]) {
+                wishList[event.target.dataset.id] = true;
+                event.target.classList.remove('far');
+                event.target.classList.add('fas');
+            } else if (wishList[event.target.dataset.id]) {
+                delete wishList[event.target.dataset.id];
+                event.target.classList.add('far');
+                event.target.classList.remove('fas');
+            }
+            localStorage.wishlist = JSON.stringify(wishList);
         }
-        localStorage.wishlist = JSON.stringify(wishList);
+        wishCounter(wishList);
     }
-    wishCounter(wishList);
-}
 
-function wishCounter(products) {
-    let counter = document.getElementById("wishCounter");
-    let val = Object.keys(products).length;
-    counter.innerHTML = val ? val : "";
+function wishCounter (products) {
+    let counter = document.getElementById('wishCounter');
+    counter.innerHTML = "";
+    if (!Object.keys(products).length) {
+        counter.innerHTML = "";
+    } else if (Object.keys(products).length) {
+        // counter.insertAdjacentHTML('afterbegin', Object.keys(products).length);
+        counter.innerHTML = Object.keys(products).length;
+    }
+  
+//   function wishCounter(products) {
+//     let counter = document.getElementById("wishCounter");
+//     let val = Object.keys(products).length;
+//     counter.innerHTML = val ? val : "";
+
+  
     // function ff() {
     //     for (let element of Object.keys(products)) {
     //         console.log(Number.parseInt(element));
@@ -236,39 +248,23 @@ function createCardTemplate(product) {
     }
 
     let html = `<div class="col my-3">
-<div class="card ${availabilityColorClass}">
-<img src="${product.img}" class="card-img-top" alt="${product.title}">
-<div class="card-body">
-<h5 class="card-title">${product.title}</h5>
-<p class="card-rating">Рейтинг: ${starTags}</p>
-${
-        product.old_price
-            ? `<p class="card-old-price"> Старая цена: ${formatter.format(
-                product.old_price * USD
-            )}</p>`
-            : ""
-        }
-<p data-price="${
-        product.price * USD
-        }" class="card-current-price">Цена: ${formatter.format(
-            product.price * USD
-        )}</p>
-<p class="card-availability ${availabilityColorClass}">Наличие: ${availability}</p>
-${product.sale && product.available ? `<p>${product.sale}</p>` : ""}
-<div class="buttons">
-<a href="#" role="button"  data-id="${product.id}" class="btn btn-success js-buy-btn mb-2 ${availabilityActionClass}">Купить</a>
-<button data-id="${product.id}" class="btn btn-clear ${
-        wishList[product.id] ? "fas" : "far"
-        } fa-heart js-wish-btn"></button>
-</div>
-${
-        product.top && product.available !== 0
-            ? `<i class="fas fa-star top-star"></i>`
-            : ""
-        }
-</div>
-</div>
-</div>`;
+          <div class="card ${availabilityColorClass}">
+            <img src="${product.img}" class="card-img-top" alt="${product.title}">
+            <div class="card-body">
+              <h5 class="card-title">${product.title}</h5>
+              <p class="card-rating">Рейтинг: ${starTags}</p>
+             ${product.old_price ? `<p class="card-old-price"> Старая цена: ${formatter.format(product.old_price * USD)}</p>` : ""}
+              <p class="card-current-price">Цена: ${formatter.format(product.price * USD)}</p>
+              <p class="card-availability ${availabilityColorClass}">Наличие: ${availability}</p>
+              ${product.sale && product.available ? `<p>${product.sale}</p>` : ""}
+              <div class="buttons">
+                  <a href="#" role="button" class="btn btn-success buy-btn mb-2 ${availabilityActionClass}">Купить</a>
+                  <button data-id="${product.id}" class="btn btn-clear ${wishList[product.id] ? 'fas' : 'far'} fa-heart js-wish-btn"></button>
+              </div>
+              ${product.top && product.available !== 0 ? `<i class="fas fa-star top-star"></i>` : ""}
+            </div>
+          </div>
+        </div>`;
 
     return html;
 }
@@ -276,7 +272,7 @@ ${
 function appendCardsToList(products) {
     for (let element of products) {
         let template = createCardTemplate(element);
-        productList.insertAdjacentHTML("beforeend", template);
+        productList.insertAdjacentHTML('beforeend', template);
     }
 }
 
@@ -416,6 +412,7 @@ function masonryChange(event) {
         const siblings = [...btn.parentNode.children].filter(function (child) {
             return child != btn;
         });
+     
         siblings.forEach((e) => {
             e.classList.remove("active");
         });
@@ -529,3 +526,4 @@ function createCartRow(product) {
 <div class="col-1 cart-body-remove"><button class="btn btn-secondary">&times;</button></div>
 </div>`;
 }
+
