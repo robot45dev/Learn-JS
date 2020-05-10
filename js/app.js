@@ -153,6 +153,11 @@ if (!localStorage.wishlist) {
     localStorage.wishlist = JSON.stringify({});
 }
 
+if (!localStorage.cart) {
+    localStorage.cart = JSON.stringify({});
+}
+
+
 const productList = document.getElementById("product-list");
 const sortSelect = document.getElementById("sort-select");
 const filterForm = document.getElementById("filter-form");
@@ -163,69 +168,67 @@ const masonry = document.getElementById("masonry");
 // const pileClassSearchSmall = document.querySelectorAll('.col-3');
 // const pileClassSearchLarge = document.querySelectorAll('.col-4');
 const wishList = JSON.parse(localStorage.wishlist);
+const wishCounterItem = document.getElementById('wishCounter');
 
 sortSelect.addEventListener("change", sorted(data));
 filterForm.addEventListener("submit", filtered(data));
 // pileSmall.addEventListener("click", pileChangeToSmall);
 masonry.addEventListener("click", masonryChange);
 stockCheckbox.addEventListener("change", stock(data));
-productList.addEventListener("click", wishListAddRemove);
+productList.addEventListener("click", wishListAddRemove(wishList));
 
-function wishListAddRemove(event) {
-    // let heart = wishList[event.target.dataset.id] –– ПОЧЕМУ НЕ РАБОТАЕТ?
+function wishListAddRemove(object) {
+    return function (event) {
         if (event.target.classList.contains('js-wish-btn')) {
-            if (!wishList[event.target.dataset.id]) {
-                wishList[event.target.dataset.id] = true;
+            if (!object[event.target.dataset.id]) {
+                object[event.target.dataset.id] = true;
                 event.target.classList.remove('far');
                 event.target.classList.add('fas');
-            } else if (wishList[event.target.dataset.id]) {
-                delete wishList[event.target.dataset.id];
+            } else if (object[event.target.dataset.id]) {
+                delete object[event.target.dataset.id];
                 event.target.classList.add('far');
                 event.target.classList.remove('fas');
             }
-            localStorage.wishlist = JSON.stringify(wishList);
+            localStorage.wishlist = JSON.stringify(object);
         }
-        wishCounter(wishList);
+        lStorageCounter(object, wishCounterItem);
     }
+}
 
-function wishCounter (products) {
-    let counter = document.getElementById('wishCounter');
-    counter.innerHTML = "";
-    if (!Object.keys(products).length) {
-        counter.innerHTML = "";
-    } else if (Object.keys(products).length) {
-        // counter.insertAdjacentHTML('afterbegin', Object.keys(products).length);
-        counter.innerHTML = Object.keys(products).length;
+function lStorageCounter (products_array, counter_item) {
+    let value = Object.keys(products_array).length;
+    if (value) {
+        counter_item.innerHTML = value;
+    } else {
+        counter_item.innerHTML = "";
     }
-  
 //   function wishCounter(products) {
 //     let counter = document.getElementById("wishCounter");
 //     let val = Object.keys(products).length;
 //     counter.innerHTML = val ? val : "";
 
-  
-    // function ff() {
-    //     for (let element of Object.keys(products)) {
-    //         console.log(Number.parseInt(element));
-    //     }
-    //     return new Array(element);
-    // }
+// function ff() {
+//     for (let element of Object.keys(products)) {
+//         console.log(Number.parseInt(element));
+//     }
+//     return new Array(element);
+// }
 }
 
 // actualPrice(data);
 // appendCardsToList(data);
 sortByDefault(data);
 changeInputs(minMax(data));
-wishCounter(wishList);
+lStorageCounter(wishList, wishCounterItem);
 
 function createCardTemplate(product) {
     let availability = ``;
     let availabilityColorClass = ``;
-    let availabilityActionClass = ``;
+    let availabilityActionSet = ``;
     if (product.available === 0) {
         availability = "Нет в наличии";
         availabilityColorClass = "remainZero";
-        availabilityActionClass = "disabled";
+        availabilityActionSet = "disabled";
     } else if (product.available <= 2) {
         availability = "Заканчивается";
         availabilityColorClass = "remainSmall";
@@ -254,12 +257,12 @@ function createCardTemplate(product) {
               <h5 class="card-title">${product.title}</h5>
               <p class="card-rating">Рейтинг: ${starTags}</p>
              ${product.old_price ? `<p class="card-old-price"> Старая цена: ${formatter.format(product.old_price * USD)}</p>` : ""}
-              <p class="card-current-price">Цена: ${formatter.format(product.price * USD)}</p>
+              <p class="card-current-price" data-price="${product.price}">Цена: ${formatter.format(product.price * USD)}</p>
               <p class="card-availability ${availabilityColorClass}">Наличие: ${availability}</p>
               ${product.sale && product.available ? `<p>${product.sale}</p>` : ""}
               <div class="buttons">
-                  <a href="#" role="button" class="btn btn-success buy-btn mb-2 ${availabilityActionClass}">Купить</a>
-                  <button data-id="${product.id}" class="btn btn-clear ${wishList[product.id] ? 'fas' : 'far'} fa-heart js-wish-btn"></button>
+                  <button data-id="${product.id}" class="btn btn-success mb-2 buy-btn js-buy-btn" ${availabilityActionSet}>Купить</button>
+                  <button data-id="${product.id}" class="btn btn-clear ${wishList[product.id] ? 'fas' : 'far'} fa-heart wish-btn js-wish-btn"></button>
               </div>
               ${product.top && product.available !== 0 ? `<i class="fas fa-star top-star"></i>` : ""}
             </div>
@@ -407,7 +410,7 @@ function stock(products) {
 
 function masonryChange(event) {
     const btn = event.target;
-    if (btn.classList.contains("js-masonry-btn")) {
+    if (btn.classList.contains("js-masonry-btn")) {   //поиск соседей на том же уровне вложенности Vanilla
         btn.classList.add("active");
         const siblings = [...btn.parentNode.children].filter(function (child) {
             return child != btn;
@@ -480,50 +483,71 @@ function changeInputs(filterValue) {
 // }
 
 ////////////////////////////////////////////////////////////////////////////////////////
-const cartBody = document.getElementById("cart-body");
 
-productList.addEventListener("click", function (e) {
-    if (e.target.classList.contains("js-buy-btn")) {
-        const buyBtn = e.target;
-        const card = parents(buyBtn, "card");
+const cartBody = document.getElementById(`cart-body`);
+const itemsCart = JSON.parse(localStorage.cart);
+
+productList.addEventListener(`click`, function (event) {
+    if (event.target.classList.contains(`js-buy-btn`)) {
+        const buyBtn = event.target;
+        const card = parents(buyBtn, `card`);
         const product = {};
 
-        product.img = card.querySelector("img").src;
-        product.title = card.querySelector(".card-title").textContent;
-        product.price = card.querySelector(".card-current-price").dataset.price;
+        product.img = card.querySelector(`img`).src;
+        product.title = card.querySelector(`.card-title`).textContent;
+        product.price = card.querySelector(`.card-current-price`).dataset.price;
 
         appendCartRow(product);
     }
-});``
+});
+
 
 function parents(node, _class) {
-    let current = node;
-    while (
-        current.parentElement != null &&
-        !current.parentElement.classList.contains(_class)
-    ) {
+    let current = node;         //Поиск указанного родителя от вложенного элемента
+    while (current.parentElement != null && !current.parentElement.classList.contains(_class)) {
         current = current.parentElement;
     }
     return current.parentElement;
 }
 
 function appendCartRow(product) {
-    cartBody.insertAdjacentHTML("beforeend", createCartRow(product));
+    cartBody.insertAdjacentHTML(`beforeend`, createCartRow(product));
+}
+
+cartBody.addEventListener("click", removeCart);
+productList.addEventListener("click", addGlobalCart(itemsCart));
+
+
+function addGlobalCart(object) {
+    return function (event) {
+        if (event.target.classList.contains(`js-buy-btn`)) {
+            if (!object[event.target.dataset.id]) {
+                object[event.target.dataset.id] = `1`;
+            }
+           event.target.disabled = true; // - ДЗ # 1;
+            alert(`Товар добавлен в корзину`);
+            localStorage.cart = JSON.stringify(object);
+        }
+    }
+}
+
+function removeCart (event) {
+    if (event.target.classList.contains(`js-cart-remove-btn`)) {
+        const removeBtn = event.target;
+        const row = parents(removeBtn, `row`);
+        row.innerHTML = ``;
+    }
 }
 
 function createCartRow(product) {
-    return `<div class="row cart-body-row">
+    return `<div class="row align-items-center py-3 cart-body-row">
 <div class="col-1 cart-body-order">1</div>
-<div class="col-1 cart-body-img"><img class="img-fluid" src="${
-        product.img
-        }" alt="${product.title}"></div>
-<div class="col-5 cart-body-title"><h6>${product.title}</h6></div>
+<div class="col-1 cart-body-img"><img class="img-fluid" src="${product.img}" alt="${product.title}"></div>
+<div class="col-4 cart-body-title"><h6>${product.title}</h6></div>
 <div class="col-1 cart-body-count"><input type="number" class="w-100" value="1"></div>
-<div class="col-1 cart-body-price" data-price="${
-        product.price
-        }">${formatter.format(product.price)}</div>
-<div class="col-2 cart-body-sum">${formatter.format(product.price)}</div>
-<div class="col-1 cart-body-remove"><button class="btn btn-secondary">&times;</button></div>
+<div class="col-2 cart-body-price" data-price="${product.price}">${formatter.format(product.price * USD)}</div>
+<div class="col-2 cart-body-sum">${formatter.format(product.price * USD)}</div>
+<div class="col-1 cart-body-remove"><button class="btn btn-secondary js-cart-remove-btn">&times;</button></div>
 </div>`;
 }
 

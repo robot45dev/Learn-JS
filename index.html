@@ -3,12 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
+    <link rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
-      crossorigin="anonymous"
-    />
+      crossorigin="anonymous"/>
     <link rel="stylesheet" href="css/style.css" />
     <title>JS</title>
   </head>
@@ -30,39 +28,18 @@
         </form>
         <form class="mb-2 mx-3" id="filter-form">
           <label for="filter-min"> От </label>
-          <input
-            id="filter-min"
-            type="number"
-            min="0"
-            max="1"
-            name="min"
-            value=""
-          />
+          <input id="filter-min" type="number" min="0" max="1" name="min" value=""/>
           <label for="filter-max"> До </label>
-          <input
-            id="filter-max"
-            type="number"
-            min="1"
-            max="1"
-            name="max"
-            value=""
-          />
+          <input id="filter-max" type="number" min="1" max="1" name="max" value=""/>
           <button type="submit">OK!</button>
         </form>
         <!-- <button class="btn btn btn-outline-success mx-3 active" id="pileLarge">P1</button>
         <button class="btn btn btn-outline-primary mx-3" id="pileSmall">P2</button> -->
         <div id="masonry">
-          <button
-            id="bttn"
-            data-action="lg"
-            class="js-masonry-btn btn btn-outline-success mx-3 active"
-          >
+          <button data-action="sm" class="btn btn-outline-success mx-3 active masonry-btn js-masonry-btn">
             P1
           </button>
-          <button
-            data-action="sm"
-            class="js-masonry-btn btn btn-outline-primary mx-3"
-          >
+          <button data-action="lg" class="btn btn-outline-primary mx-3 masonry-btn js-masonry-btn">
             P2
           </button>
         </div>
@@ -75,32 +52,34 @@
           <i class="far fa-heart"></i>
         </div>
       </div>
-      <div class="row row-cols-3 product-list" id="product-list"></div>
+      <div class="row row-cols-4 product-list" id="product-list">
+<!--        JS gener-->
+      </div>
     </div>
 
     <div class="container">
-      <div class="cart card  my-5 py-5" id="cart">
+      <div class="cart card my-5 pb-1" id="cart">
         <div class="cart-header card-header p-3">
           <div class="row">
             <div class="col-1 cart-header-order">#</div>
             <div class="col-1 cart-header-img">Img</div>
-            <div class="col-5 cart-header-title">Title</div>
+            <div class="col-4 cart-header-title">Title</div>
             <div class="col-1 cart-header-count">Count</div>
-            <div class="col-1 cart-header-price">Price</div>
+            <div class="col-2 cart-header-price">Price</div>
             <div class="col-2 cart-header-sum">Sum</div>
             <div class="col-1 cart-header-remove">Remove</div>
           </div>
         </div>
         <div class="cart-body p-3" id="cart-body">
-          <!-- <div class="row cart-body-row">
-            <div class="col-1 cart-body-order">#</div>
-            <div class="col-1 cart-body-img"><img src="" alt=""></div>
-            <div class="col-5 cart-body-title"><h6></h6></div>
-            <div class="col-1 cart-body-count"><input type="number" class="w-100"></div>
-            <div class="col-1 cart-body-price">Price</div>
-            <div class="col-2 cart-body-sum">Sum</div>
-            <div class="col-1 cart-body-remove"><button class="btn btn-secondary">&times;</button></div>
-          </div> -->
+<!--          <div class="row cart-body-row">-->
+<!--            <div class="col-1 cart-body-order">#</div>-->
+<!--            <div class="col-1 cart-body-img"><img src="" alt=""></div>-->
+<!--            <div class="col-5 cart-body-title"><h6></h6></div>-->
+<!--            <div class="col-1 cart-body-count"><input type="number" class="w-100"></div>-->
+<!--            <div class="col-1 cart-body-price">Price</div>-->
+<!--            <div class="col-2 cart-body-sum">Sum</div>-->
+<!--            <div class="col-1 cart-body-remove"><button class="btn btn-secondary">&times;</button></div>-->
+<!--          </div>-->
         </div>
         <div class="col- cart-footer"></div>
       </div>
@@ -109,19 +88,16 @@
     <script
       src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
       integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-      crossorigin="anonymous"
-    ></script>
+      crossorigin="anonymous"></script>
     <script
       src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
       integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-      crossorigin="anonymous"
-    ></script>
+      crossorigin="anonymous"></script>
     <script src="js/app.js"></script>
     <script
       async
       src="https://kit.fontawesome.com/889edc2e87.js"
-      crossorigin="anonymous"
-    ></script>
+      crossorigin="anonymous"></script>
   </body>
 </html>
 
