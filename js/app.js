@@ -150,7 +150,7 @@ const data = [
 ];
 
 if (!localStorage.wishlist) {
-    localStorage.wishlist = JSON.stringify({})
+    localStorage.wishlist = JSON.stringify({});
 }
 
 const productList = document.getElementById("product-list");
@@ -164,14 +164,12 @@ const masonry = document.getElementById("masonry");
 // const pileClassSearchLarge = document.querySelectorAll('.col-4');
 const wishList = JSON.parse(localStorage.wishlist);
 
-
 sortSelect.addEventListener("change", sorted(data));
 filterForm.addEventListener("submit", filtered(data));
 // pileSmall.addEventListener("click", pileChangeToSmall);
 masonry.addEventListener("click", masonryChange);
 stockCheckbox.addEventListener("change", stock(data));
 productList.addEventListener("click", wishListAddRemove);
-
 
 function wishListAddRemove(event) {
     // let heart = wishList[event.target.dataset.id] –– ПОЧЕМУ НЕ РАБОТАЕТ?
@@ -199,6 +197,13 @@ function wishCounter (products) {
         // counter.insertAdjacentHTML('afterbegin', Object.keys(products).length);
         counter.innerHTML = Object.keys(products).length;
     }
+  
+//   function wishCounter(products) {
+//     let counter = document.getElementById("wishCounter");
+//     let val = Object.keys(products).length;
+//     counter.innerHTML = val ? val : "";
+
+  
     // function ff() {
     //     for (let element of Object.keys(products)) {
     //         console.log(Number.parseInt(element));
@@ -407,9 +412,10 @@ function masonryChange(event) {
         const siblings = [...btn.parentNode.children].filter(function (child) {
             return child != btn;
         });
-        siblings.forEach(e =>{
+     
+        siblings.forEach((e) => {
             e.classList.remove("active");
-        })
+        });
 
         if (btn.dataset.action == "sm") {
             productList.classList.add("row-cols-4");
@@ -454,4 +460,70 @@ function changeInputs(filterValue) {
     maxInput.value = maxInput.max;
 }
 
+// let arrr = ['2','5','9'];
+
+// arrr.forEach((e,i,a) =>{
+//     a[i] = +e;
+//     if (i == 1) {
+//         return false;
+//     }
+//     console.log(i);
+
+// })
+// console.log(arrr);
+
+// for (const key in object) {
+//     if (object.hasOwnProperty(key)) {
+//         const element = object[key];
+
+//     }
+// }
+
+////////////////////////////////////////////////////////////////////////////////////////
+const cartBody = document.getElementById("cart-body");
+
+productList.addEventListener("click", function (e) {
+    if (e.target.classList.contains("js-buy-btn")) {
+        const buyBtn = e.target;
+        const card = parents(buyBtn, "card");
+        const product = {};
+
+        product.img = card.querySelector("img").src;
+        product.title = card.querySelector(".card-title").textContent;
+        product.price = card.querySelector(".card-current-price").dataset.price;
+
+        appendCartRow(product);
+    }
+});``
+
+function parents(node, _class) {
+    let current = node;
+    while (
+        current.parentElement != null &&
+        !current.parentElement.classList.contains(_class)
+    ) {
+        current = current.parentElement;
+    }
+    return current.parentElement;
+}
+
+function appendCartRow(product) {
+    cartBody.insertAdjacentHTML("beforeend", createCartRow(product));
+}
+
+function createCartRow(product) {
+    return `<div class="row cart-body-row">
+<div class="col-1 cart-body-order">1</div>
+<div class="col-1 cart-body-img"><img class="img-fluid" src="${
+        product.img
+        }" alt="${product.title}"></div>
+<div class="col-5 cart-body-title"><h6>${product.title}</h6></div>
+<div class="col-1 cart-body-count"><input type="number" class="w-100" value="1"></div>
+<div class="col-1 cart-body-price" data-price="${
+        product.price
+        }">${formatter.format(product.price)}</div>
+<div class="col-2 cart-body-sum">${formatter.format(product.price)}</div>
+<div class="col-1 cart-body-remove"><button class="btn btn-secondary">&times;</button></div>
+</div>`;
+}
 
